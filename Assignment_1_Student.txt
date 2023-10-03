@@ -1,0 +1,99 @@
+CREATE TABLE IF NOT EXISTS Student(
+sr_no INT,
+std_id VARCHAR(5),
+std_drive_id VARCHAR(5),
+std_training_id VARCHAR(5),
+std_name VARCHAR(40),
+std_CGPA FLOAT,
+std_branch VARCHAR(50),
+std_DOB DATE
+);
+
+
+CREATE TABLE IF NOT EXISTS PlacementDrive(
+drive_id VARCHAR(5),
+placement_company VARCHAR(30),
+package INT,
+location VARCHAR(20)
+);
+
+CREATE TABLE IF NOT EXISTS Training(
+training_id VARCHAR(5),
+training_comp_name VARCHAR(30),
+training_fee INT,
+training_year VARCHAR(4)
+);
+
+ALTER TABLE Student
+ADD CONSTRAINT std_id_pk
+PRIMARY KEY(std_id);
+
+ALTER TABLE PlacementDrive
+ADD CONSTRAINT drive_id_pk
+PRIMARY KEY(drive_id);
+
+ALTER TABLE Training 
+ADD CONSTRAINT training_id_pk
+PRIMARY KEY(training_id);
+
+ALTER TABLE Student 
+ADD CONSTRAINT drive_id_fk
+FOREIGN KEY(std_drive_id) REFERENCES PlacementDrive(drive_id) ON DELETE CASCADE;
+
+ALTER TABLE Student 
+ADD CONSTRAINT training_id_fk
+FOREIGN KEY(std_training_id) REFERENCES Training(training_id) ON DELETE CASCADE;
+
+ALTER TABLE Student
+MODIFY COLUMN sr_no INT UNIQUE KEY AUTO_INCREMENT ; 
+
+INSERT INTO PlacementDrive (drive_id, placement_company, package, location)
+VALUES
+  ('D101', 'Google', 1200000, 'San Francisco'),
+  ('D102', 'Microsoft', 1100000, 'Redmond'),
+  ('D103', 'Apple Inc.', 1150000, 'Cupertino'),
+  ('D104', 'Amazon', 1050000, 'Seattle'),
+  ('D105', 'Facebook', 1000000, 'Menlo Park'),
+  ('D106', 'Netflix', 950000, 'Los Gatos'),
+  ('D107', 'Adobe Systems', 980000, 'San Jose'),
+  ('D108', 'Salesforce', 990000, 'San Francisco'),
+  ('D109', 'Oracle Corporation', 1075000, 'Redwood City'),
+  ('D110', 'Tesla', 1250000, 'Palo Alto');
+
+INSERT INTO Training (training_id, training_comp_name, training_fee, training_year)
+VALUES
+  ('T101', 'Infosys', 25000, '2022'),
+  ('T102', 'Wipro', 22000, '2022'),
+  ('T103', 'Tata Consultancy Services', 28000, '2022'),
+  ('T104', 'Cognizant', 23000, '2022'),
+  ('T105', 'Tech Mahindra', 27000, '2022'),
+  ('T106', 'HCL Technologies', 26000, '2022'),
+  ('T107', 'Accenture', 30000, '2022');
+
+-- Assuming Drive IDs and Training IDs from previous entries
+INSERT INTO Student (std_id, std_drive_id, std_training_id, std_name, std_CGPA, std_branch, std_DOB)
+VALUES
+  ('S101', 'D101', 'T101', 'Rajesh Kumar', 8.5, 'Computer Science', '1995-05-15'),
+  ('S102', 'D102', 'T102', 'Priya Verma', 8.2, 'Electrical Engineering', '1994-12-10'),
+  ('S103', 'D103', 'T103', 'Amit Patil', 8.8, 'Mechanical Engineering', '1996-02-25'),
+  ('S104', 'D104', 'T104', 'Deepa Mishra', 8.0, 'Information Technology', '1997-07-03'),
+  ('S105', 'D105', 'T105', 'Prakash Singh', 9.2, 'Computer Science', '1994-09-18'),
+  ('S106', 'D106', 'T106', 'Sneha Gupta', 7.7, 'Electrical Engineering', '1995-11-05'),
+  ('S107', 'D107', 'T107', 'Rahul Kumar', 8.4, 'Mechanical Engineering', '1996-10-20'),
+  ('S108', 'D101', 'T101', 'Neha Rajput', 9.0, 'Information Technology', '1997-03-30'),
+  ('S109', 'D102', 'T102', 'Amar Yadav', 8.3, 'Computer Science', '1996-01-12'),
+  ('S110', 'D103', 'T103', 'Harish Sharma', 9.5, 'Electrical Engineering', '1995-06-28'),
+  ('S111', 'D104', 'T104', 'Anjali Gupta', 7.9, 'Mechanical Engineering', '1997-08-14'),
+  ('S112', 'D105', 'T105', 'Swati Patil', 8.6, 'Information Technology', '1996-04-22'),
+  ('S113', 'D106', 'T106', 'Ramesh Kumar', 8.1, 'Computer Science', '1993-07-08'),
+  ('S114', 'D107', 'T107', 'Smita Reddy', 9.3, 'Electrical Engineering', '1994-09-05'),
+  ('S115', 'D101', 'T101', 'Liam Robinson', 7.8, 'Mechanical Engineering', '1993-10-12'),
+  ('S116', 'D102', 'T102', 'Ananya Joshi', 8.7, 'Information Technology', '1994-02-08'),
+  ('S117', 'D103', 'T103', 'Arjun Singh', 9.1, 'Computer Science', '1992-11-15'),
+  ('S118', 'D104', 'T104', 'Priyanka Sharma', 8.2, 'Electrical Engineering', '1997-07-27'),
+  ('S119', 'D105', 'T105', 'Shyam Gupta', 8.9, 'Mechanical Engineering', '1994-09-30'),
+  ('S120', 'D106', 'T106', 'Manisha Verma', 8.4, 'Information Technology', '1995-05-03');
+
+CREATE VIEW std_result AS SELECT std_id, std_name, std_CGPA FROM Student;  
+
+CREATE INDEX std_name_index on Student(std_name);
