@@ -49,33 +49,36 @@ MODIFY COLUMN sr_no INT UNIQUE KEY AUTO_INCREMENT ;
 
 INSERT INTO PlacementDrive (drive_id, placement_company, package, location)
 VALUES
-  ('D101', 'Google', 1200000, 'San Francisco'),
-  ('D102', 'Microsoft', 1100000, 'Redmond'),
-  ('D103', 'Apple Inc.', 1150000, 'Cupertino'),
-  ('D104', 'Amazon', 1050000, 'Seattle'),
-  ('D105', 'Facebook', 1000000, 'Menlo Park'),
-  ('D106', 'Netflix', 950000, 'Los Gatos'),
-  ('D107', 'Adobe Systems', 980000, 'San Jose'),
-  ('D108', 'Salesforce', 990000, 'San Francisco'),
-  ('D109', 'Oracle Corporation', 1075000, 'Redwood City'),
-  ('D110', 'Tesla', 1250000, 'Palo Alto');
+  ('D101', 'Google', 22000, 'Bengaluru'),
+  ('D102', 'Microsoft', 30000, 'Hyderabad'),
+  ('D103', 'Apple Inc.', 40000, 'Mumbai'),
+  ('D104', 'Amazon', 60000, 'Pune'),
+  ('D105', 'Facebook', 70000, 'Chennai'),
+  ('D106', 'Netflix', 80000, 'Delhi'),
+  ('D107', 'Adobe Systems', 45000, 'Kolkata'),
+  ('D108', 'Salesforce', 55000, 'Jaipur'),
+  ('D109', 'Oracle Corporation', 25000, 'Ahmedabad'),
+  ('D110', 'Tesla', 35000, 'Gurugram');
+
+
 
 INSERT INTO Training (training_id, training_comp_name, training_fee, training_year)
 VALUES
-  ('T101', 'Infosys', 25000, '2022'),
-  ('T102', 'Wipro', 22000, '2022'),
-  ('T103', 'Tata Consultancy Services', 28000, '2022'),
-  ('T104', 'Cognizant', 23000, '2022'),
-  ('T105', 'Tech Mahindra', 27000, '2022'),
+  ('T101', 'Infosys', 25000, '2017'),
+  ('T102', 'Wipro', 22000, '2018'),
+  ('T103', 'Tata Consultancy Services', 28000, '2019'),
+  ('T104', 'Cognizant', 23000, '2020'),
+  ('T105', 'Tech Mahindra', 27000, '2021'),
   ('T106', 'HCL Technologies', 26000, '2022'),
   ('T107', 'Accenture', 30000, '2022');
+
 
 -- Assuming Drive IDs and Training IDs from previous entries
 INSERT INTO Student (std_id, std_drive_id, std_training_id, std_name, std_CGPA, std_branch, std_DOB)
 VALUES
   ('S101', 'D101', 'T101', 'Rajesh Kumar', 8.5, 'Computer Science', '1995-05-15'),
   ('S102', 'D102', 'T102', 'Priya Verma', 8.2, 'Electrical Engineering', '1994-12-10'),
-  ('S103', 'D103', 'T103', 'Amit Patil', 8.8, 'Mechanical Engineering', '1996-02-25'),
+  ('S103', 'D103', 'T103', 'Amit Patil', 6.8, 'Mechanical Engineering', '1996-02-25'),
   ('S104', 'D104', 'T104', 'Deepa Mishra', 8.0, 'Information Technology', '1997-07-03'),
   ('S105', 'D105', 'T105', 'Prakash Singh', 9.2, 'Computer Science', '1994-09-18'),
   ('S106', 'D106', 'T106', 'Sneha Gupta', 7.7, 'Electrical Engineering', '1995-11-05'),
@@ -91,9 +94,53 @@ VALUES
   ('S116', 'D102', 'T102', 'Ananya Joshi', 8.7, 'Information Technology', '1994-02-08'),
   ('S117', 'D103', 'T103', 'Arjun Singh', 9.1, 'Computer Science', '1992-11-15'),
   ('S118', 'D104', 'T104', 'Priyanka Sharma', 8.2, 'Electrical Engineering', '1997-07-27'),
-  ('S119', 'D105', 'T105', 'Shyam Gupta', 8.9, 'Mechanical Engineering', '1994-09-30'),
+  ('S119', 'D105', 'T105', 'Shyam Gupta', 6.9, 'Mechanical Engineering', '1994-09-30'),
   ('S120', 'D106', 'T106', 'Manisha Verma', 8.4, 'Information Technology', '1995-05-03');
 
-CREATE VIEW std_result AS SELECT std_id, std_name, std_CGPA FROM Student;  
+SELECT * FROM (SELECT * FROM Student WHERE std_branch = 'Computer Science' OR std_branch = 'Information Technology') AS branch_filter WHERE std_name REGEXP "^[ad]";
 
-CREATE INDEX std_name_index on Student(std_name);
+
+SELECT DISTINCT placement_company FROM PlacementDrive ; 
+
+SELECT training_id, training_comp_name, 
+CASE
+  WHEN training_year = 2019 THEN training_fee * 1.15
+  ELSE training_fee
+END
+AS updated_fee, training_year
+FROM Training;
+
+-- UPDATE Training SET training_fee = training_fee * 1.15 WHERE training_year = 2019  ;
+
+DELETE FROM Student WHERE std_CGPA < 7 ; 
+
+SELECT placement_company, location FROM PlacementDrive WHERE location = 'Pune' OR location = 'Mumbai';
+
+SELECT std_id, std_name , std_training_id FROM Student WHERE std_training_id IN (SELECT training_id FROM Training WHERE training_year = 2019 OR training_year = 2021);
+
+SELECT std_id, std_name, std_CGPA FROM Student WHERE std_CGPA = (SELECT MAX(std_CGPA) FROM Student) ; 
+
+SELECT std_id, std_name, std_CGPA FROM Student WHERE std_CGPA BETWEEN 7 AND 9 ; 
+
+SELECT s.std_id, s.std_name, s.std_training_id, t.training_comp_name, t.training_fee FROM Student s, Training t WHERE s.std_training_id = t.training_id ORDER BY t.training_fee DESC;
+
+
+SELECT s.std_id, s.std_name, s.std_drive_id, p.placement_company, p.package FROM Student s, PlacementDrive p WHERE s.std_drive_id = p.drive_id AND p.package IN (30000,40000,50000);
+
+CREATE VIEW std_result AS SELECT std_id, std_name, std_CGPA FROM Student ; 
+
+CREATE INDEX std_name_index ON Student(std_name);
+
+SELECT * FROM Student ; 
+
+SELECT * FROM PlacementDrive ; 
+
+SELECT * FROM Training ; 
+
+DROP TABLE Student ; 
+
+DROP TABLE Training ; 
+
+DROP TABLE PlacementDrive ; 
+
+DROP VIEW std_result ; 

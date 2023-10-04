@@ -1,3 +1,0 @@
-ALTER TABLE Student 
-ADD CONSTRAINT training_id_fk
-FOREIGN KEY(std_training_id) REFERENCES Training(training_id);
