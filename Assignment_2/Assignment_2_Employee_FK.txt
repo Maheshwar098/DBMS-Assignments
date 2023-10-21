@@ -1,0 +1,136 @@
+CREATE TABLE IF NOT EXISTS Employee(
+sr_no INT,
+emp_id VARCHAR(5),
+dept_id VARCHAR(5),
+emp_fname VARCHAR(15),
+emp_lname VARCHAR(15),
+emp_position VARCHAR(30),
+emp_salary INT, 
+emp_birth_date DATE, 
+emp_join_date DATE);
+
+CREATE TABLE IF NOT EXISTS Department(
+dept_id VARCHAR(5),
+dept_name VARCHAR(15),
+dept_location VARCHAR(15)
+);
+
+CREATE TABLE IF NOT EXISTS Project(
+proj_id VARCHAR(5),
+dept_id VARCHAR(5),
+proj_name VARCHAR(40),
+proj_location VARCHAR(15),
+proj_cost INT,
+proj_year INT
+);
+
+SHOW TABLES;
+
+ALTER TABLE Department
+ADD CONSTRAINT dept_id_pk
+PRIMARY KEY (dept_id) ;
+
+INSERT INTO Department (dept_id, dept_name, dept_location)
+VALUES
+  ('D101', 'Computer', 'Bangalore'),
+  ('D102', 'Marketing', 'Mumbai'),
+  ('D103', 'Finance', 'Delhi'),
+  ('D104', 'HR', 'Pune'),
+  ('D105', 'Research', 'Hyderabad'),
+  ('D106', 'IT Support', 'Chennai'),
+  ('D107', 'Legal', 'Kolkata');
+
+ALTER TABLE Employee 
+ADD CONSTRAINT emp_id_pk
+PRIMARY KEY(emp_id);
+
+ALTER TABLE Employee 
+ADD CONSTRAINT dept_fk 
+FOREIGN KEY(dept_id) REFERENCES Department(dept_id) ON DELETE CASCADE;
+
+ALTER TABLE Employee 
+MODIFY COLUMN sr_no INT UNIQUE KEY AUTO_INCREMENT;
+
+INSERT INTO Employee (emp_id, dept_id, emp_fname, emp_lname, emp_position, emp_salary, emp_birth_date, emp_join_date)
+VALUES
+  ('E101', 'D101', 'Rajesh', 'Sharma', 'Manager', 75000, '1980-01-10', '2022-01-10'),
+  ('E102', 'D102', 'Priya', 'Verma', 'Software Engineer', 60000, '1981-02-15', '2022-02-15'),
+  ('E103', 'D103', 'Amit', 'Patil', 'Database Administrator', 65000, '1982-03-20', '2022-03-20'),
+  ('E104', 'D104', 'Deepa', 'Mishra', 'HR Manager', 70000, '1983-04-25', '2022-04-25'),
+  ('E105', 'D101', 'Pratik', 'Singh', 'Senior Developer', 68000, '1984-05-05', '2022-05-05'),
+  ('E106', 'D102', 'Sneha', 'Gupta', 'Software Engineer', 60000, '1990-06-10', '2022-06-10'),
+  ('E107', 'D103', 'Rahul', 'Kumar', 'System Analyst', 62000, '1991-07-15', '2022-07-15'),
+  ('E108', 'D104', 'Neha', 'Rajput', 'HR Assistant', 45000, '1992-08-20', '2022-08-20'),
+  ('E109', 'D101', 'Amar', 'Yadav', 'Junior Developer', 50000, '1993-09-25', '2022-09-25'),
+  ('E110', 'D106', 'Harish', 'Sharma', 'Software Engineer', 60000, '1994-10-30', '2022-10-30'),
+  ('E111', 'D103', 'Anand', 'Gupta', 'Database Administrator', 65000, '1995-11-05', '2022-11-05'),
+  ('E112', 'D104', 'Jyoti', 'Singh', 'HR Manager', 70000, '1996-12-10', '2022-12-10'),
+  ('E113', 'D101', 'Ramesh', 'Kumar', 'Senior Developer', 68000, '1997-01-15', '2023-01-15'),
+  ('E114', 'D102', 'Swati', 'Patil', 'Software Engineer', 60000, '1998-02-20', '2023-02-20'),
+  ('E115', 'D103', 'Raj', 'Mishra', 'System Analyst', 62000, '1999-03-25', '2023-03-25');
+ALTER TABLE Project                                                                  ADD CONSTRAINT proj_id_pk                                                            PRIMARY KEY(proj_id);
+
+ALTER TABLE Project
+ADD CONSTRAINT dept_id_fk
+FOREIGN KEY(dept_id) REFERENCES Department(dept_id) ON DELETE CASCADE;
+
+INSERT INTO Project (proj_id, dept_id, proj_name, proj_location, proj_cost, proj_year)
+VALUES
+  ('P101', 'D101', 'Website Redesign', 'Bangalore', 500000, 2020),
+  ('P102', 'D102', 'Mobile App Development', 'Mumbai', 450000, 2023),
+  ('P103', 'D103', 'Financial Software Upgrade', 'Delhi', 550000, 2015),
+  ('P104', 'D104', 'HR Management System', 'Pune', 480000, 2023),
+  ('P105', 'D105', 'Data Analytics Project', 'Hyderabad', 520000, 2005),
+  ('P106', 'D101', 'E-commerce Platform Expansion', 'Bangalore', 480000, 2004),
+  ('P107', 'D102', 'Marketing Campaign Launch', 'Mumbai', 510000, 2020),
+  ('P108', 'D103', 'Inventory Management System', 'Delhi', 490000, 2023),
+  ('P109', 'D104', 'Employee Training Portal', 'Pune', 530000, 2023),
+  ('P110', 'D105', 'Cloud Infrastructure Upgrade', 'Hyderabad', 470000, 2007);
+
+SELECT emp_id, CONCAT(emp_fname, ' ', emp_lname) AS emp_name, dept_id, dept_name
+FROM 
+Employee NATURAL JOIN Department;
+
+SELECT emp_id, emp_fname, emp_position, dept_id, dept_name,dept_location , emp_join_date 
+FROM 
+Employee NATURAL JOIN Department;
+
+SELECT emp_id, CONCAT(emp_fname, ' ', emp_lname) AS emp_name, dept_id, proj_name, proj_location 
+FROM
+Employee NATURAL JOIN Project 
+WHERE proj_location != 'Hyderabad' ;
+
+SELECT emp_id, CONCAT(emp_fname, ' ', emp_lname) AS emp_name, emp_position,dept_name, proj_name, proj_year
+FROM 
+Employee NATURAL JOIN Department
+NATURAL JOIN Project
+WHERE proj_year = 2020 ; 
+
+SELECT emp_id, CONCAT(emp_fname, ' ', emp_lname) AS emp_name, emp_position, dept_name, proj_cost FROM 
+Employee NATURAL JOIN Department NATURAL JOIN Project 
+WHERE proj_cost > 30000;
+
+SELECT proj_id, proj_name FROM Project WHERE proj_year = 2015 ; 
+
+SELECT * FROM (SELECT dept_id, dept_name, COUNT(*) AS employee_cnt FROM (SELECT * FROM Employee NATURAL JOIN Department) AS joined_table GROUP BY dept_id, dept_name) AS inner_table WHERE employee_cnt = 4; 
+
+SELECT COUNT(*) As emp_before_2009 FROM Employee NATURAL JOIN Department NATURAL JOIN Project WHERE proj_year < 2009;
+
+CREATE VIEW emp_departments AS 
+SELECT emp_id, CONCAT(emp_fname,' ', emp_lname) AS emp_name, dept_id, dept_name, dept_location FROM Employee NATURAL JOIN Department ORDER BY emp_id;
+
+SELECT * FROM Employee;
+
+SELECT * FROM Department;
+
+SELECT * FROM Project ; 
+
+SELECT * FROM emp_departments;
+
+DROP TABLE Employee;
+
+DROP TABLE Project ;
+
+DROP TABLE Department;
+
+DROP VIEW emp_departments;

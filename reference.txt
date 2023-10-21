@@ -1,0 +1,107 @@
+CREATE TABLE IF NOT EXISTS Employee(
+sr_no INT,
+emp_id VARCHAR(5),
+dept_id VARCHAR(5),
+emp_fname VARCHAR(20),
+emp_lname VARCHAR(20),
+emp_position VARCHAR(50),
+emp_salary INT,
+emp_join_date DATE
+);
+
+CREATE TABLE IF NOT EXISTS Department (
+dept_id VARCHAR(5),
+dept_name VARCHAR(20),
+dept_location VARCHAR(20)
+);
+
+CREATE TABLE IF NOT EXISTS Project(
+proj_id VARCHAR(5),
+dept_id VARCHAR(5),
+proj_name VARCHAR(20),
+proj_location VARCHAR(20),
+proj_cost INT,
+proj_year INT
+);
+
+ALTER TABLE Department 
+ADD CONSTRAINT dept_id_pk
+PRIMARY KEY(dept_id);
+
+ALTER TABLE Employee 
+ADD CONSTRAINT dept_id_fk
+FOREIGN KEY(dept_id) REFERENCES Department(dept_id);
+
+ALTER TABLE Employee 
+MODIFY COLUMN sr_no INT UNIQUE KEY AUTO_INCREMENT;
+
+ALTER TABLE Department 
+MODIFY COLUMN dept_name VARCHAR(30) ;
+
+ALTER TABLE Employee 
+ADD CONSTRAINT emp_id_pk
+PRIMARY KEY(emp_id);
+
+ALTER TABLE Project
+ADD CONSTRAINT proj_id_pk
+PRIMARY KEY(proj_id);
+
+INSERT INTO Department (dept_id, dept_name, dept_location)
+VALUES
+  ('D001', 'Computer', 'Bangalore'),
+  ('D002', 'Marketing', 'Mumbai'),
+  ('D003', 'Finance', 'Delhi'),
+  ('D004', 'HR', 'Pune'),
+  ('D005', 'Research', 'Hyderabad'),
+  ('D006', 'IT Support', 'Chennai'),
+  ('D007', 'Legal', 'Kolkata');
+
+INSERT INTO Employee (sr_no, emp_id, dept_id, emp_fname, emp_lname, emp_position, emp_salary, emp_join_date) VALUES
+(1, 'E001', 'D001', 'John', 'Doe', 'Manager', 80000, '2023-01-15'),
+(2, 'E002', 'D002', 'Alice', 'Smith', 'Accountant', 60000, '2023-02-20'),
+(3, 'E003', 'D003', 'Bob', 'Johnson', 'Marketing Specialist', 55000, '2023-03-10'),
+(4, 'E004', 'D004', 'Sarah', 'Brown', 'Software Engineer', 75000, '2023-04-05'),
+(5, 'E005', 'D005', 'Michael', 'Lee', 'Sales Representative', 60000, '2023-05-12'),
+(6, 'E006', 'D001', 'Emily', 'Wilson', 'HR Coordinator', 55000, '2023-06-08'),
+(7, 'E007', 'D002', 'David', 'Taylor', 'Financial Analyst', 65000, '2023-07-17'),
+(8, 'E008', 'D003', 'Linda', 'Clark', 'Marketing Coordinator', 52000, '2023-08-25'),
+(9, 'E009', 'D004', 'James', 'Harris', 'Senior Software Engineer', 85000, '2023-09-30'),
+(10, 'E010', 'D005', 'Olivia', 'Martinez', 'Sales Manager', 70000, '2023-10-14');
+
+INSERT INTO Project (proj_id, dept_id, proj_name, proj_location, proj_cost, proj_year) VALUES
+('P001', 'D001', 'Employee Training', 'New York', 10000, 2023),
+('P002', 'D002', 'Financial Analysis', 'Chicago', 15000, 2023),
+('P003', 'D003', 'Product Launch', 'Los Angeles', 25000, 2023),
+('P004', 'D004', 'Software Development', 'San Francisco', 35000, 2023),
+('P005', 'D005', 'Sales Campaign', 'Dallas', 12000, 2023),
+('P006', 'D001', 'HR Policy Update', 'New York', 8000, 2023),
+('P007', 'D002', 'Budget Planning', 'Chicago', 18000, 2023);
+
+SELECT * FROM Employee WHERE dept_id IN (SELECT dept_id FROM Department WHERE dept_name = 'Computer' OR dept_name = 'IT Support') AND emp_fname REGEXP "^[JE]";
+
+SELECT DISTINCT emp_position FROM Employee;
+
+SELECT emp_id, CONCAT(emp_fname,emp_lname) AS emp_name,
+CASE
+	WHEN month(emp_join_date)<5 THEN emp_salary * 1.1
+	ELSE emp_salary
+END
+AS salary_increment
+FROM Employee;
+
+SELECT proj_id, proj_name FROM Project WHERE proj_cost BETWEEN 10000 AND 50000;
+
+SELECT proj_id, proj_name, proj_cost FROM Project WHERE proj_cost = (SELECT max(proj_cost) FROM Project);
+
+SELECT avg(proj_cost) AS average_cost FROM Project;
+
+SELECT emp_id, CONCAT(emp_fname,' ',emp_lname) AS emp_name FROM Employee ORDER BY emp_lname DESC;
+
+SELECT proj_id, proj_name, proj_location, proj_cost FROM Project WHERE proj_year = 2004 OR proj_year = 2005 OR proj_year = 2006 OR proj_year = 2023;
+
+DROP TABLE Employee;
+
+DROP TABLE Project;
+
+DROP TABLE Department;
+
