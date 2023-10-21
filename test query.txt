@@ -1,1 +1,1 @@
-SELECT proj_id, proj_name, proj_location, proj_cost FROM Project WHERE proj_year = 2004 OR proj_year = 2005 OR proj_year = 2006 OR proj_year = 2023;
+SELECT proj_id, proj_name, proj_location, proj_cost, proj_year FROM Project WHERE proj_year IN (2004, 2005, 2007);
