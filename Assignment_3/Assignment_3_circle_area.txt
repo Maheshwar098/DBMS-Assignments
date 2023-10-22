@@ -1,0 +1,33 @@
+CREATE TABLE IF NOT EXISTS CircleArea(
+sr_no INT UNIQUE KEY AUTO_INCREMENT ,
+radius FLOAT, 
+Area FLOAT
+);
+
+
+SET SQL_MODE = "ORACLE";
+
+DELIMITER //
+
+DECLARE 
+area FLOAT;
+pi FLOAT;
+
+BEGIN
+SET pi = 3.14 ; 
+TRUNCATE TABLE CircleArea;
+FOR i IN 5..9 LOOP
+  SET area = pi * i * i ;
+  INSERT INTO CircleArea SET CircleArea.radius = i, CircleArea.area = area;
+END LOOP;
+
+END
+
+//
+
+
+DELIMITER ;
+
+SELECT * FROM CircleArea;
+
+DROP TABLE CircleArea;
