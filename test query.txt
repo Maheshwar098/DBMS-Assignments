@@ -1,1 +1,0 @@
-SELECT proj_id, proj_name, proj_location, proj_cost, proj_year FROM Project WHERE proj_year IN (2004, 2005, 2007);

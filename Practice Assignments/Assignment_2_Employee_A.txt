@@ -1,0 +1,126 @@
+CREATE TABLE IF NOT EXISTS Employee(
+emp_id VARCHAR(5),
+dept_id VARCHAR(5),
+emp_fname VARCHAR(30),
+emp_lname VARCHAR(30),
+emp_position VARCHAR(30),
+emp_salary INT, 
+emp_join_date DATE
+);
+
+CREATE TABLE IF NOT EXISTS Department(
+dept_id VARCHAR(5),
+dept_name VARCHAR(30),
+dept_location VARCHAR(20)
+);
+
+CREATE TABLE IF NOT EXISTS Project(
+proj_id VARCHAR(5),
+dept_id VARCHAR(5),
+proj_name VARCHAR(30),
+proj_location VARCHAR(30),
+proj_cost INT, 
+proj_year INT
+);
+
+ALTER TABLE Department 
+ADD CONSTRAINT dept_id_pk
+PRIMARY KEY(dept_id);
+
+ALTER TABLE Employee 
+ADD CONSTRAINT emp_id_pk
+PRIMARY KEY(emp_id);
+
+ALTER TABLE Project
+ADD CONSTRAINT proj_id_pk
+PRIMARY KEY(proj_id);
+
+ALTER TABLE Employee
+ADD CONSTRAINT emp_dept_id_fk
+FOREIGN KEY(dept_id) REFERENCES Department(dept_id);
+
+ALTER TABLE Project
+ADD CONSTRAINT proj_dept_id_fk
+FOREIGN KEY(dept_id) REFERENCES Department(dept_id);
+
+INSERT INTO Department (dept_id, dept_name, dept_location)
+VALUES
+    ('D001', 'Information Technology', 'Bangalore, India'),
+    ('D002', 'Software Development', 'Mumbai, India'),
+    ('D003', 'Network Administration', 'Delhi, India'),
+    ('D004', 'Software Engineering', 'Hyderabad, India'),
+    ('D005', 'Web Development', 'Chennai, India'),
+    ('D006', 'Database Management', 'Pune, India'),
+    ('D007', 'Application Development', 'Kolkata, India');
+
+INSERT INTO Employee (sr_no, emp_id, dept_id, emp_fname, emp_lname, emp_position, emp_salary, emp_join_date)
+VALUES
+    (1, 'E001', 'D001', 'Rajesh', 'Kumar', 'Software Engineer', 75000, '2023-01-15'),
+    (2, 'E002', 'D001', 'Priya', 'Verma', 'System Analyst', 80000, '2023-02-20'),
+    (3, 'E003', 'D002', 'Amit', 'Sharma', 'Web Developer', 65000, '2023-03-10'),
+    (4, 'E004', 'D002', 'Sneha', 'Mishra', 'UI Designer', 60000, '2023-04-05'),
+    (5, 'E005', 'D002', 'Vikas', 'Singh', 'Software Engineer', 70000, '2023-05-12'),
+    (6, 'E006', 'D003', 'Neha', 'Gupta', 'Network Administrator', 75000, '2023-06-17'),
+    (7, 'E007', 'D003', 'Rahul', 'Patel', 'Network Engineer', 70000, '2023-07-23'),
+    (8, 'E008', 'D004', 'Suresh', 'Yadav', 'Software Engineer', 72000, '2023-08-30'),
+    (9, 'E009', 'D004', 'Anita', 'Chopra', 'Database Administrator', 78000, '2023-09-14'),
+    (10, 'E010', 'D004', 'Deepak', 'Verma', 'Data Analyst', 68000, '2023-10-01'),
+    (11, 'E011', 'D005', 'Meena', 'Das', 'Web Developer', 65000, '2023-11-08'),
+    (12, 'E012', 'D005', 'Raj', 'Singh', 'Software Engineer', 72000, '2023-12-15'),
+    (13, 'E013', 'D006', 'Sanjay', 'Mishra', 'Application Developer', 75000, '2024-01-10'),
+    (14, 'E014', 'D006', 'Poonam', 'Yadav', 'Web Designer', 60000, '2024-02-27'),
+    (15, 'E015', 'D007', 'Vishal', 'Sharma', 'Database Administrator', 78000, '2024-03-05');
+
+
+INSERT INTO Project (proj_id, dept_id, proj_name, proj_location, proj_cost, proj_year)
+VALUES
+    ('P001', 'D001', 'Project Odyssey', 'Bangalore', 100000, 2005),
+    ('P002', 'D001', 'Project Phoenix', 'Mumbai', 120000, 2006),
+    ('P003', 'D002', 'Project Nebula', 'Delhi', 90000, 2007),
+    ('P004', 'D002', 'Project Orion', 'Hyderabad', 80000, 2008),
+    ('P005', 'D003', 'Project Genesis', 'Pune', 110000, 2009),
+    ('P006', 'D003', 'Project Infinity', 'Kolkata', 95000, 2010),
+    ('P007', 'D004', 'Project Titan', 'Chennai', 105000, 2005);
+
+SELECT emp_id, CONCAT(emp_fname, ' ', emp_lname) AS emp_name, dept_id, dept_name FROM 
+Employee
+NATURAL JOIN 
+Department;
+
+SELECT emp_id, CONCAT(emp_fname, ' ', emp_lname) AS emp_name, dept_id, dept_name, emp_position, dept_location, emp_join_date FROM (Department NATURAL JOIN Employee);
+DROP TABLE Employee;
+
+SELECT emp_id, CONCAT(emp_fname, ' ', emp_lname) AS emp_name, proj_id, proj_name, proj_cost, proj_location FROM Employee NATURAL JOIN Project WHERE proj_location != 'Hyderabad';
+
+SELECT emp_id, CONCAT(emp_fname, ' ', emp_lname) AS emp_name, dept_id, dept_name, emp_position FROM 
+Employee NATURAL JOIN Department NATURAL JOIN Project 
+WHERE proj_year = 2005;
+
+SELECT emp_id, CONCAT(emp_fname, ' ', emp_lname) AS emp_name, emp_position, dept_id, dept_name, proj_cost FROM 
+Employee NATURAL JOIN Department NATURAL JOIN Project 
+WHERE proj_cost > 30000;
+
+SELECT proj_id, proj_name FROM Project WHERE proj_year = 2005 ;
+
+SELECT * FROM (SELECT dept_id, dept_name, COUNT(*) as emp_cnt FROM 
+Employee NATURAL JOIN Department 
+GROUP BY dept_name , dept_id) AS joined WHERE emp_cnt = 2;
+
+SELECT COUNT(*) AS emp_cnt FROM Employee NATURAL JOIN Project WHERE proj_year < 2009;
+
+CREATE VIEW emp_dept AS SELECT emp_id, CONCAT(emp_fname, ' ', emp_lname) AS emp_name, dept_id, dept_name FROM Employee NATURAL JOIN Department;
+
+INSERT INTO Employee (emp_id, dept_id, emp_fname, emp_lname, emp_position, emp_salary, emp_join_date)
+VALUES ('E020', 'D001', 'John', 'Doe', 'Software Engineer', 75000, '2023-10-15');
+
+UPDATE Employee SET sr_no = 21 WHERE emp_id = 'E020';
+
+DELETE FROM Employee WHERE sr_no = 21;
+
+SELECT * FROM emp_dept;
+
+DROP VIEW emp_dept;
+
+DROP TABLE Project;
+
+DROP TABLE Department;
