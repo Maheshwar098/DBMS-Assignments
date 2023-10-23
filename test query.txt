@@ -1,0 +1,14 @@
+
+CREATE OR REPLACE TRIGGER delete_backup 
+BEFORE DELETE 
+ON LibraryRecord
+FOR EACH ROW
+INSERT INTO LibraryAudit SET book_id = old.book_id, book_name = old.book_name, shelf_no = old.shelf_no;
+
+DELETE FROM LibraryRecord WHERE book_id = 109;
+
+DROP TRIGGER delete_backup;
+
+SELECT * FROM LibraryRecord;
+
+SELECT * FROM LibraryAudit ;
