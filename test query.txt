@@ -1,14 +1,8 @@
+// find students with marks more than 90 marks
+db.Student.find({marks:{$gte:90}},{name:1,class:1,marks:1,_id:0});
 
-CREATE OR REPLACE TRIGGER delete_backup 
-BEFORE DELETE 
-ON LibraryRecord
-FOR EACH ROW
-INSERT INTO LibraryAudit SET book_id = old.book_id, book_name = old.book_name, shelf_no = old.shelf_no;
+//find students of class A with  more than 90 marks
+db.Student.find({$and:[{class:'A'},{marks:{$gte:90}}]},{name:1,class:1,marks:1,_id:0});
 
-DELETE FROM LibraryRecord WHERE book_id = 109;
-
-DROP TRIGGER delete_backup;
-
-SELECT * FROM LibraryRecord;
-
-SELECT * FROM LibraryAudit ;
+// find students of class A or C
+db.Student.find({$or:[{class:'A'},{class:'B'}]},{name:1,class:1,marks:1,_id:0});
