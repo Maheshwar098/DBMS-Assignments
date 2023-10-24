@@ -1,8 +1,20 @@
-// find students with marks more than 90 marks
-db.Student.find({marks:{$gte:90}},{name:1,class:1,marks:1,_id:0});
+// creating a index on roll 
+db.Student.createIndex({roll_no : 1});
 
-//find students of class A with  more than 90 marks
-db.Student.find({$and:[{class:'A'},{marks:{$gte:90}}]},{name:1,class:1,marks:1,_id:0});
+db.Student.find({roll_no:5});
 
-// find students of class A or C
-db.Student.find({$or:[{class:'A'},{class:'B'}]},{name:1,class:1,marks:1,_id:0});
+// drop index
+db.Student.dropIndex({roll_no : 1});
+
+db.Student.find({roll_no:5});
+
+// creating a index on roll 
+db.Student.createIndex({roll_no : -1});
+
+db.Student.find({roll_no:5});
+
+// drop index
+db.Student.dropIndex({roll_no : -1});
+
+
+db.Student.find({roll_no:5});
