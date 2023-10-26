@@ -1,20 +1,17 @@
-// creating a index on roll 
-db.Student.createIndex({roll_no : 1});
+var mpFunc = function(){
+	emit(this.class,this.marks);
+};
 
-db.Student.find({roll_no:5});
+var redFun = function(key,vals){
+	return Array.sum(vals);
+};
 
-// drop index
-db.Student.dropIndex({roll_no : 1});
+db.Student.mapReduce(
+	mpFunc,
+	redFunc,
+	{out:"total_marks"}
+);
 
-db.Student.find({roll_no:5});
-
-// creating a index on roll 
-db.Student.createIndex({roll_no : -1});
-
-db.Student.find({roll_no:5});
-
-// drop index
-db.Student.dropIndex({roll_no : -1});
+db.total_marks.find();
 
 
-db.Student.find({roll_no:5});
