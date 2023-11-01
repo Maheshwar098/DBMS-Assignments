@@ -1,17 +1,14 @@
-var mpFunc = function(){
-	emit(this.class,this.marks);
-};
+use admin
 
-var redFun = function(key,vals){
-	return Array.sum(vals);
-};
+db.createUser(
 
-db.Student.mapReduce(
-	mpFunc,
-	redFunc,
-	{out:"total_marks"}
-);
+{
+	user:"test_user",
+	pwd:passwordPrompt(),
+	roles: [
+      { role: "userAdminAnyDatabase", db: "admin" },
+      { role: "readWriteAnyDatabase", db: "admin" }
+    ]
+}
 
-db.total_marks.find();
-
-
+)
