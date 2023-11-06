@@ -1,0 +1,272 @@
+db.createCollection("PatientData");
+
+db.PatientData.insertMany([
+  {
+    "patient_name": "John Doe",
+    "patient_age": 35,
+    "patient_weight": 75.5,
+    "patient_height": 175,
+    "patient_address": {
+      "city": "New York",
+      "postalCode": "10001"
+    },
+    "patient_health_record": [
+      {
+        "disease": "Hypertension",
+        "treatment": "Medication"
+      },
+      {
+        "disease": "Diabetes",
+        "treatment": "Insulin therapy"
+      }
+    ],
+    "chronic_condition": ["Asthma", "High Cholesterol"]
+  },
+  {
+    "patient_name": "Jane Smith",
+    "patient_age": 28,
+    "patient_weight": 62.0,
+    "patient_height": 163,
+    "patient_address": {
+      "city": "Los Angeles",
+      "postalCode": "90001"
+    },
+    "patient_health_record": [
+      {
+        "disease": "Asthma",
+        "treatment": "Inhalers"
+      },
+      {
+        "disease": "Migraine",
+        "treatment": "Pain relievers"
+      }
+    ],
+    "chronic_condition": ["Arthritis"]
+  },
+  {
+    "patient_name": "Bob Johnson",
+    "patient_age": 45,
+    "patient_weight": 80.2,
+    "patient_height": 180,
+    "patient_address": {
+      "city": "Chicago",
+      "postalCode": "60601"
+    },
+    "patient_health_record": [
+      {
+        "disease": "Hypertension",
+        "treatment": "Medication"
+      },
+      {
+        "disease": "Hypothyroidism",
+        "treatment": "Thyroid hormone replacement"
+      }
+    ],
+    "chronic_condition": ["Obesity"]
+  },
+  {
+    "patient_name": "Alice Brown",
+    "patient_age": 31,
+    "patient_weight": 68.7,
+    "patient_height": 165,
+    "patient_address": {
+      "city": "San Francisco",
+      "postalCode": "94101"
+    },
+    "patient_health_record": [
+      {
+        "disease": "Asthma",
+        "treatment": "Inhalers"
+      },
+      {
+        "disease": "High Cholesterol",
+        "treatment": "Statins"
+      }
+    ],
+    "chronic_condition": ["Diabetes"]
+  },
+  {
+    "patient_name": "David Wilson",
+    "patient_age": 38,
+    "patient_weight": 73.0,
+    "patient_height": 178,
+    "patient_address": {
+      "city": "Boston",
+      "postalCode": "02101"
+    },
+    "patient_health_record": [
+      {
+        "disease": "Hypertension",
+        "treatment": "Medication"
+      },
+      {
+        "disease": "Depression",
+        "treatment": "Therapy"
+      }
+    ],
+    "chronic_condition": ["Chronic Pain"]
+  },
+  {
+    "patient_name": "Linda Taylor",
+    "patient_age": 40,
+    "patient_weight": 69.8,
+    "patient_height": 170,
+    "patient_address": {
+      "city": "Seattle",
+      "postalCode": "98101"
+    },
+    "patient_health_record": [
+      {
+        "disease": "Asthma",
+        "treatment": "Inhalers"
+      },
+      {
+        "disease": "Obesity",
+        "treatment": "Diet and exercise"
+      }
+    ],
+    "chronic_condition": ["High Blood Pressure"]
+  },
+  {
+    "patient_name": "Michael Harris",
+    "patient_age": 34,
+    "patient_weight": 76.5,
+    "patient_height": 175,
+    "patient_address": {
+      "city": "Denver",
+      "postalCode": "80201"
+    },
+    "patient_health_record": [
+      {
+        "disease": "High Cholesterol",
+        "treatment": "Statins"
+      },
+      {
+        "disease": "Diabetes",
+        "treatment": "Insulin therapy"
+      }
+    ],
+    "chronic_condition": ["Cancer"]
+  },
+  {
+    "patient_name": "Sarah Martin",
+    "patient_age": 29,
+    "patient_weight": 65.3,
+    "patient_height": 168,
+    "patient_address": {
+      "city": "Dallas",
+      "postalCode": "75201"
+    },
+    "patient_health_record": [
+      {
+        "disease": "Migraine",
+        "treatment": "Pain relievers"
+      },
+      {
+        "disease": "Hypothyroidism",
+        "treatment": "Thyroid hormone replacement"
+      }
+    ],
+    "chronic_condition": ["HIV/AIDS"]
+  },
+  {
+    "patient_name": "Kevin Turner",
+    "patient_age": 27,
+    "patient_weight": 70.0,
+    "patient_height": 172,
+    "patient_address": {
+      "city": "Miami",
+      "postalCode": "33101"
+    },
+    "patient_health_record": [
+      {
+        "disease": "High Cholesterol",
+        "treatment": "Statins"
+      },
+      {
+        "disease": "Diabetes",
+        "treatment": "Insulin therapy"
+      }
+    ],
+    "chronic_condition": ["Alzheimer's Disease"]
+  }
+]);
+
+// displaying list of all patients
+db.PatientData.find({},{_id:0});
+
+// displaying patient name,age and address
+db.PatientData.find({},{_id:0,patient_name:1,patient_age:1,patient_address:1});
+
+// displaying patient with given name
+db.PatientData.find({patient_name : 'Alice Brown'},{_id:0});
+
+// displaying patient with age 31
+db.PatientData.find({patient_age:31},{_id:0,patient_name:1,patient_age:1,patient_health_record:1});
+
+//displaying patient who lives in new york
+db.PatientData.find({"patient_address.city":"New York"},{_id:0,patient_name:1,patient_address:1,patient_health_record:1});
+
+//displaying patient who lives in new york
+db.PatientData.findOne({"patient_address.city":"New York"},{_id:0,patient_name:1,patient_address:1,patient_health_record:1});
+
+// find patient who ever had diabetes
+db.PatientData.find({"patient_health_record.disease":"Diabetes"},{_id:0,patient_name:1,patient_health_record:1});
+
+// find patient who ever treated with Statins
+db.PatientData.find({"patient_health_record.treatment":"Statins"});
+
+// viewing only chronic condition
+db.PatientData.find({},{_id:0,chronic_condition:1});
+
+// viewing sliced chronic condition
+db.PatientData.find({},{_id:0,patient_name:1,chronic_condition:1,chronic_condition:{$slice:[0,1]}})
+
+// finding patients with diabetes chronic condition
+db.PatientData.find({chronic_condition:"Diabetes"},{_id:0,patient_name:1,chronic_condition:1});
+
+// find patient with both asthama and high cholestrol
+db.PatientData.find({chronic_condition:{$all:["High Cholesterol","Asthma"]}},{_id:0,patient_name:1,chronic_condition:1});
+
+// getting size of chronic condition array
+db.PatientData.aggregate([{$project:{patient_name: 1,chronic_problems_cnt : {$size:"$chronic_condition"}}}]);
+
+// unwind array
+db.PatientData.aggregate([{$unwind:"$chronic_condition"}]);
+
+// find patient with age more than 27
+db.PatientData.find({patient_age:{$gt:27}});
+
+// find patient with weight less than 70
+db.PatientData.find({patient_weight:{$lt:70}})
+
+// calculate bmi
+db.PatientData.aggregate([{$project : { bmi:{$divide:["$patient_weight","$patient_height"]}}}])
+
+// update weight based on the age
+db.PatientData.update({patient_age:27},{$set:{patient_weight:74}});
+
+// update weight and height based on age
+db.PatientData.update({patient_age:27},{$set:{patient_weight:80,patient_height:100}});
+
+// update age 
+db.PatientData.update({$or:[{patient_age:27},{patient_age:29}]},{$set:{patient_age:28}}, {multi:true});
+
+// upsert
+db.PatientData.update({patient_age:100},{$set:{patient_height:0,patient_weight:0}},{upsert:true});
+
+// update location field using multi true
+db.PatientData.update({},{$set:{patient_location:"Pune"}},{multi:true})
+
+// update location using updateMany
+db.PatientData.updateMany({},{$set:{patient_location:"Mumbai"}});
+
+// delete a particular document
+db.PatientData.deleteOne({patient_age:100});
+
+// delete multiple documents with age 28
+db.PatientData.deleteMany({patient_age:28});
+
+// delete all records 
+db.PatientData.deleteMany({});
+

@@ -1,0 +1,243 @@
+db.createCollection("PatientData");
+
+db.PatientData.insertMany([
+  {
+    "patient_id":1,
+    "patient_name": "John Doe",
+    "patient_age": 35,
+    "patient_weight": 75.5,
+    "patient_height": 175,
+    "patient_address": {
+      "city": "New York",
+      "postalCode": "10001"
+    },
+    "patient_health_record": [
+      {
+        "disease": "Hypertension",
+        "treatment": "Medication"
+      },
+      {
+        "disease": "Diabetes",
+        "treatment": "Insulin therapy"
+      }
+    ],
+    "chronic_condition": ["Asthma", "High Cholesterol"]
+  },
+  {
+    "patient_id":2,
+    "patient_name": "Jane Smith",
+    "patient_age": 28,
+    "patient_weight": 62.0,
+    "patient_height": 163,
+    "patient_address": {
+      "city": "Los Angeles",
+      "postalCode": "90001"
+    },
+    "patient_health_record": [
+      {
+        "disease": "Asthma",
+        "treatment": "Inhalers"
+      },
+      {
+        "disease": "Migraine",
+        "treatment": "Pain relievers"
+      }
+    ],
+    "chronic_condition": ["Arthritis"]
+  },
+
+  {
+    "patient_id":3,
+    "patient_name": "Alice Brown",
+    "patient_age": 31,
+    "patient_weight": 68.7,
+    "patient_height": 165,
+    "patient_address": {
+      "city": "San Francisco",
+      "postalCode": "94101"
+    },
+    "patient_health_record": [
+      {
+        "disease": "Asthma",
+        "treatment": "Inhalers"
+      },
+      {
+        "disease": "High Cholesterol",
+        "treatment": "Statins"
+      }
+    ],
+    "chronic_condition": ["Diabetes"]
+  },
+  {
+    "patient_id":4,
+    "patient_name": "David Wilson",
+    "patient_age": 38,
+    "patient_weight": 73.0,
+    "patient_height": 178,
+    "patient_address": {
+      "city": "Boston",
+      "postalCode": "02101"
+    },
+    "patient_health_record": [
+      {
+        "disease": "Hypertension",
+        "treatment": "Medication"
+      },
+      {
+        "disease": "Depression",
+        "treatment": "Therapy"
+      }
+    ],
+    "chronic_condition": ["Chronic Pain"]
+  },
+  {
+    "patient_id":5,
+    "patient_name": "Linda Taylor",
+    "patient_age": 40,
+    "patient_weight": 69.8,
+    "patient_height": 170,
+    "patient_address": {
+      "city": "Seattle",
+      "postalCode": "98101"
+    },
+    "patient_health_record": [
+      {
+        "disease": "Asthma",
+        "treatment": "Inhalers"
+      },
+      {
+        "disease": "Obesity",
+        "treatment": "Diet and exercise"
+      }
+    ],
+    "chronic_condition": ["High Blood Pressure"]
+  },
+  {
+    "patient_id":6,
+    "patient_name": "Michael Harris",
+    "patient_age": 34,
+    "patient_weight": 76.5,
+    "patient_height": 175,
+    "patient_address": {
+      "city": "Denver",
+      "postalCode": "80201"
+    },
+    "patient_health_record": [
+      {
+        "disease": "High Cholesterol",
+        "treatment": "Statins"
+      },
+      {
+        "disease": "Diabetes",
+        "treatment": "Insulin therapy"
+      }
+    ],
+    "chronic_condition": ["Cancer"]
+  },
+  {
+"patient_id":7,
+    "patient_name": "Sarah Martin",
+    "patient_age": 29,
+    "patient_weight": 65.3,
+    "patient_height": 168,
+    "patient_address": {
+      "city": "Dallas",
+      "postalCode": "75201"
+    },
+    "patient_health_record": [
+      {
+        "disease": "Migraine",
+        "treatment": "Pain relievers"
+      },
+      {
+        "disease": "Hypothyroidism",
+        "treatment": "Thyroid hormone replacement"
+      }
+    ],
+    "chronic_condition": ["HIV/AIDS"]
+  },
+  {
+"patient_id":8,
+    "patient_name": "Kevin Turner",
+    "patient_age": 27,
+    "patient_weight": 70.0,
+    "patient_height": 172,
+    "patient_address": {
+      "city": "Miami",
+      "postalCode": "33101"
+    },
+    "patient_health_record": [
+      {
+        "disease": "High Cholesterol",
+        "treatment": "Statins"
+      },
+      {
+        "disease": "Diabetes",
+        "treatment": "Insulin therapy"
+      }
+    ],
+    "chronic_condition": ["Alzheimer's Disease"]
+  },
+  {
+  "patient_id":9,
+    "patient_name": "Bob Johnson",
+    "patient_age": 45,
+    "patient_weight": 80.2,
+    "patient_height": 180,
+    "patient_address": {
+      "city": "Chicago",
+      "postalCode": "60601"
+    },
+    "patient_health_record": [
+      {
+        "disease": "Hypertension",
+        "treatment": "Medication"
+      },
+      {
+        "disease": "Hypothyroidism",
+        "treatment": "Thyroid hormone replacement"
+      }
+    ],
+    "chronic_condition": ["Obesity"]
+  }
+]);
+
+const mapFunc = function()
+{
+	emit(this.patient_address.city,this.patient_age);
+
+}
+
+const reduceFunc = function(city, age)
+{
+	return Array.sum(age);
+}
+
+db.PatientData.mapReduce(
+mapFunc,
+reduceFunc,
+{out:"totalCityAge"}
+)
+
+db.totalCityAge.find();
+
+const mapFunc = function()
+{
+	emit(this.patient_address.city,this.patient_weight);
+}
+
+
+const reduceFunc = function(city,weight)
+{
+	return Array.avg(weight);
+
+}
+
+db.PatientData.mapReduce(
+mapFunc,
+reduceFunc,
+{out:"averageWeight"}
+)
+
+db.averageWeight.find();
+

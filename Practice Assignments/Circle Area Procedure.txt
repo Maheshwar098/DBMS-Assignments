@@ -1,0 +1,38 @@
+CREATE TABLE IF NOT EXISTS CircleArea(
+	radius INT,
+	area FLOAT
+);
+
+
+
+SET SQL_MODE = "ORACLE";
+
+DELIMITER //
+
+CREATE OR REPLACE PROCEDURE calculateArea()
+AS
+pi FLOAT;
+area FLOAT;
+BEGIN
+SET pi = 3.14;
+
+FOR r in 5..9 LOOP
+	SET area = pi * r * r ;
+	INSERT INTO CircleArea SET CircleArea.radius = r , CircleArea.area = area;
+
+END LOOP;	
+
+END
+//
+
+DELIMITER ;
+
+CALL calculateArea();
+
+DROP PROCEDURE calculateArea;
+
+SELECT * FROM CircleArea;
+
+DROP TABLE CircleArea;
+
+	

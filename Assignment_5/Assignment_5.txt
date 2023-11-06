@@ -28,7 +28,8 @@ VALUES
     (9, 'Suresh Yadav'),   
     (10, 'Anita Chopra'), 
     (11, 'Meena Das'),     
-    (12, 'Raj Singh');     
+    (12, 'Raj Singh');  
+   
 SET SQL_MODE = "ORACLE";
 
 DELIMITER //

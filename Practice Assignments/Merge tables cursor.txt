@@ -1,0 +1,79 @@
+
+CREATE TABLE IF NOT EXISTS StdData(
+std_id INT,
+std_name VARCHAR(30)
+);
+
+CREATE TABLE IF NOT EXISTS NewStdData(
+std_id INT,
+std_name VARCHAR(30)
+);
+
+INSERT INTO StdData (std_id, std_name)
+VALUES
+(1, 'John Smith'),
+(2, 'Emily Johnson'),
+(3, 'Michael Brown'),
+(4, 'Sophia Wilson'),
+(5, 'Daniel Lee'),
+(6, 'Olivia Kim'),
+(7, 'James Davis'),
+(8, 'Ava Martinez'),
+(9, 'William Rodriguez'),
+(10, 'Emma Harris');
+
+INSERT INTO NewStdData (std_id, std_name)
+VALUES
+(1, 'John Smith'),
+(3, 'Michael Brown'),
+(5, 'Daniel Lee'),
+(6, 'Olivia Kim'),
+(8, 'Ava Martinez'),
+(11, 'Steve Smith'),
+(12, 'Liam Johnson');
+
+SELECT * FROM StdData;
+
+SELECT * FROM NewStdData;
+
+
+SET SQL_MODE = "ORACLE";
+
+DELIMITER //
+
+CREATE OR REPLACE PROCEDURE merge_data()
+AS
+roll INT;
+name VARCHAR(30);
+CURSOR c IS SELECT * FROM NewStdData;
+BEGIN
+
+OPEN c;
+
+FETCH c INTO roll,name;
+
+WHILE c%FOUND LOOP
+FETCH c INTO roll,name;
+IF (roll NOT IN (SELECT std_id FROM StdData WHERE StdData.std_id = roll AND StdData.std_name= name)) THEN
+	INSERT INTO StdData SET std_id = roll, std_name=name;
+END IF;
+END LOOP;
+CLOSE c;
+
+END
+//
+
+
+DELIMITER ;
+
+CALL merge_data();
+
+DROP PROCEDURE merge_data;
+
+SELECT * FROM StdData;
+
+SELECT * FROM NewStdData;
+
+DROP TABLE StdData;
+
+DROP TABLE NewStdData;

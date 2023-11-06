@@ -1,0 +1,98 @@
+
+CREATE TABLE IF NOT EXISTS Borrower(
+roll_no INT,
+name VARCHAR(30),
+DOI DATE,
+book_name VARCHAR(30),
+status VARCHAR(1)
+);
+
+CREATE TABLE IF NOT EXISTS Fine(
+roll_no INT,
+name VARCHAR(30),
+DOR DATE,
+amount INT
+);
+
+INSERT INTO Borrower (roll_no, name, DOI, book_name, status)
+VALUES
+(1, 'John Smith', '2023-10-27', 'Book 1', 'I'),
+(2, 'Emily Johnson', '2023-10-26', 'Book 2', 'I'),
+(3, 'Michael Brown', '2023-10-25', 'Book 3', 'I'),
+(4, 'Sophia Wilson', '2023-10-24', 'Book 4', 'I'),
+(5, 'Daniel Lee', '2023-10-23', 'Book 5', 'I'),
+(6, 'Olivia Kim', '2023-10-22', 'Book 6', 'I'),
+(7, 'James Davis', '2023-10-21', 'Book 7', 'I'),
+(8, 'Ava Martinez', '2023-10-20', 'Book 8', 'I'),
+(9, 'William Rodriguez', '2023-10-19', 'Book 9', 'I'),
+(10, 'Emma Harris', '2023-10-18', 'Book 10', 'I');
+
+
+SELECT * FROM Borrower;
+
+SELECT * FROM Fine;
+
+
+
+SET SQL_MODE = "ORACLE";
+
+DELIMITER //
+
+DECLARE
+curr_roll_no INT;
+issued_date DATE;
+return_date DATE;
+days_diff INT;
+roll_no_not_found EXCEPTION;
+fine INT;
+borrower_name VARCHAR(30);
+
+BEGIN
+
+SET curr_roll_no = 4;
+SET return_date = '2023-12-11';
+IF(curr_roll_no NOT IN (SELECT roll_no FROM Borrower)) THEN
+	RAISE roll_no_not_found;
+END IF;
+
+SELECT DOI INTO issued_date FROM Borrower WHERE Borrower.roll_no = curr_roll_no;
+
+SELECT name INTO borrower_name FROM Borrower WHERE Borrower.roll_no = curr_roll_no;
+
+SET days_diff = DATEDIFF(return_date,issued_date);
+
+IF days_diff BETWEEN 15 AND 30 THEN
+	SET fine = 5 * days_diff;
+ELSIF days_diff>30 THEN
+	SET fine = 30*5 + (days_diff-30)*50;
+ELSE 
+	SET fine = 0 ;
+END IF ;
+
+IF fine > 0 THEN 
+	INSERT INTO Fine SET roll_no = curr_roll_no , DOR = return_date, amount = fine, name=borrower_name;
+END IF;
+
+
+UPDATE Borrower SET status = 'R' WHERE Borrower.roll_no = curr_roll_no;
+
+EXCEPTION
+	WHEN roll_no_not_found THEN
+		SELECT 'Roll no does not exist' AS Error_msg;
+END
+//
+
+DELIMITER ;
+
+
+SELECT * FROM Borrower;
+
+SELECT * FROM Fine;
+
+
+
+DROP TABLE Borrower;
+
+DROP TABLE Fine;
+
+

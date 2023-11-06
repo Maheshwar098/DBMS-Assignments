@@ -1,0 +1,72 @@
+CREATE TABLE IF NOT EXISTS BookRecord(
+book_id INT,
+book_name VARCHAR(30),
+book_shelf INT
+);
+
+
+CREATE TABLE IF NOT EXISTS LibraryAudit(
+book_id INT,
+book_name VARCHAR(30),
+book_shelf INT,
+action VARCHAR(1)
+);
+
+INSERT INTO BookRecord (book_id, book_name, book_shelf)
+VALUES
+(1, 'Book 1', 101),
+(2, 'Book 2', 102),
+(3, 'Book 3', 103),
+(4, 'Book 4', 101),
+(5, 'Book 5', 104),
+(6, 'Book 6', 102),
+(7, 'Book 7', 105),
+(8, 'Book 8', 103),
+(9, 'Book 9', 101),
+(10, 'Book 10', 106);
+
+
+
+
+
+DELIMITER //
+
+CREATE OR REPLACE TRIGGER update_backup
+BEFORE UPDATE
+ON BookRecord
+FOR EACH ROW
+INSERT INTO LibraryAudit SET LibraryAudit.book_id = old.book_id, LibraryAudit.book_name = old.book_name, LibraryAudit.book_shelf = old.book_shelf, LibraryAudit.action = 'U';
+//
+DELIMITER ;
+
+DELIMITER //
+
+CREATE OR REPLACE TRIGGER delete_backup
+BEFORE DELETE
+ON BookRecord
+FOR EACH ROW
+INSERT INTO LibraryAudit SET LibraryAudit.book_id = old.book_id, LibraryAudit.book_name = old.book_name, LibraryAudit.book_shelf = old.book_shelf, LibraryAudit.action = 'D';
+//
+
+DELIMITER ;
+
+
+UPDATE BookRecord SET book_shelf = 302 WHERE book_shelf = 102;
+
+DELETE FROM BookRecord WHERE book_name = 'Book 10';
+
+SELECT * FROM BookRecord;
+
+SELECT * FROM LibraryAudit;
+
+DROP TRIGGER update_backup;
+
+DROP TRIGGER delete_backup;
+
+
+
+
+DROP TABLE BookRecord;
+
+
+DROP TABLE LibraryAudit;

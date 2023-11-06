@@ -1,90 +1,14 @@
-db.createCollection("Student");
+SELECT * FROM 
+Employee NATURAL JOIN Department;
 
+SELECT * FROM 
+Employee INNER JOIN Department
+ON Employee.dept_id = Department.dept_id;
 
-db.Student.insertMany([
-    {
-        roll: 1,
-        name: 'John Smith',
-        class: 'A',
-        marks: 90
-    },
-    {
-        roll: 2,
-        name: 'Emily Johnson',
-        class: 'B',
-        marks: 85
-    },
-    {
-        roll: 3,
-        name: 'Michael Brown',
-        class: 'C',
-        marks: 92
-    },
-    {
-        roll: 4,
-        name: 'Sophia Wilson',
-        class: 'A',
-        marks: 88
-    },
-    {
-        roll: 5,
-        name: 'Daniel Lee',
-        class: 'B',
-        marks: 94
-    },
-    {
-        roll: 6,
-        name: 'Olivia Kim',
-        class: 'C',
-        marks: 87
-    },
-    {
-        roll: 7,
-        name: 'James Davis',
-        class: 'A',
-        marks: 91
-    },
-    {
-        roll: 8,
-        name: 'Ava Martinez',
-        class: 'B',
-        marks: 86
-    },
-    {
-        roll: 9,
-        name: 'William Rodriguez',
-        class: 'C',
-        marks: 89
-    },
-    {
-        roll: 10,
-        name: 'Emma Harris',
-        class: 'A',
-        marks: 93
-    }
-]);
-
-db.Student.find({},{_id:0});
-
-var mpFunc = function(){
-	emit(this.class,this.marks);
-};
-
-var redFun = function(key,vals){
-	return Array.sum(vals);
-};
-
-db.Student.mapReduce(
-	mpFunc,
-	redFunc,
-	{out:"total_marks"}
-);
-
-db.total_marks.find();
-
-
-show collections;
-
-db.total_marks.drop();
-
-db.Student.drop();
+SELECT * FROM 
+Employee LEFT JOIN Department
+ON Employee.dept_id = Department.dept_id
+UNION
+SELECT * FROM 
+Employee RIGHT JOIN Department
+ON Employee.dept_id = Department.dept_id;

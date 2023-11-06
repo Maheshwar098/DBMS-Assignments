@@ -1,0 +1,91 @@
+CREATE TABLE IF NOT EXISTS StdMarks(
+	roll_no INT,
+	name VARCHAR(30),
+	total_marks INT
+);
+
+CREATE TABLE IF NOT EXISTS Result(
+	roll_no INT,
+	name VARCHAR(30),
+	total_marks INT,
+	class VARCHAR(30)
+);
+
+-- Inserting 10 records with random total marks
+INSERT INTO StdMarks (roll_no, name, total_marks)
+VALUES
+(1, 'John Smith', 1200),
+(2, 'Emily Johnson', 1350),
+(3, 'Michael Brown', 1425),
+(4, 'Sophia Wilson', 1275),
+(5, 'Daniel Lee', 1300),
+(6, 'Olivia Kim', 1390),
+(7, 'James Davis', 1285),
+(8, 'Ava Martinez', 1315),
+(9, 'William Rodriguez', 1380),
+(10, 'Emma Harris', 1260);
+
+
+SET SQL_MODE = "ORACLE";
+
+DELIMITER //
+
+CREATE OR REPLACE FUNCTION get_grade(marks INT) RETURN VARCHAR(30)
+AS
+grade VARCHAR(30);
+BEGIN
+
+IF marks BETWEEN 990 AND 1500 THEN
+	SET grade = 'DISTINCTION';
+ELSIF marks BETWEEN 900 AND 989 THEN
+	SET grade= 'FIRST CLASS';
+ELSIF marks BETWEEN 825 AND 899 THEN
+	SET grade = 'HIGHER SECOND CLASS';
+ELSE 
+	SET grade = 'PASS';
+
+END IF;
+
+return grade;
+
+
+END
+//
+
+
+CREATE OR REPLACE PROCEDURE update_result(roll_no INT)
+AS
+std_name VARCHAR(30);
+std_total_marks INT;
+std_grade VARCHAR(30);
+BEGIN
+
+SELECT name INTO std_name FROM StdMarks WHERE StdMarks.roll_no = roll_no;
+
+SELECT total_marks INTO std_total_marks FROM StdMarks WHERE StdMarks.roll_no = roll_no;
+
+SET std_grade = get_grade(std_total_marks);
+
+
+INSERT INTO Result SET Result.roll_no = roll_no, Result.name = std_name, Result.total_marks = std_total_marks, Result.class = std_grade;
+
+
+END
+//
+
+DELIMITER ;
+
+CALL update_result(1);
+
+DROP FUNCTION get_grade;
+
+DROP PROCEDURE update_result;
+
+SELECT * FROM StdMarks;
+
+SELECT * FROM Result;
+
+DROP TABLE StdMarks;
+
+DROP TABLE Result;
+

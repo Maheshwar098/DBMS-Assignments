@@ -1,14 +1,1 @@
-use admin
-
-db.createUser(
-
-{
-	user:"test_user",
-	pwd:passwordPrompt(),
-	roles: [
-      { role: "userAdminAnyDatabase", db: "admin" },
-      { role: "readWriteAnyDatabase", db: "admin" }
-    ]
-}
-
-)
+SELECT * FROM Employee WHERE sr_no<10 UNION SELECT * FROM Employee WHERE sr_no>=11;
